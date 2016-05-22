@@ -1,0 +1,66 @@
+---
+title: "A Short Introduction to the kinn Package"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Description
+
+This is a tutorial which explains the main idea behind kinn algorithm  and demonstrates a usage of the kinn package for regression.  
+
+### Algorithm
+The process begins by building a graph G(V,E) from a given training set.  
+At first, V nodes groups in G(V,E) is defined as the training set (X,Y).  
+Then the number of neighbours/edges in the graph, hence |E| is calculated proportionally to the noise of the data taking E(Y|X) as a measure of it. 
+(The nosier the data - the more edges are allocated in order to smooth the noise)  
+Once the number of edges |E| is calculated, the edges group E itself is created  by allocating edges according to node to node similarity.
+The  similar nodes are, the more chance that an edge between them
+will be formed and added to the edges set E graph during edge allocation process.  
+Given G(V,E), we can now predict x by:
+
+* Finding the most similar node to x the graph  
+* Evaluating a predictor $\hat{y}$ by averaging most similar y(x) independent variable and it's neighbours (all y's of the neighbours)
+
+_Note that as oppose to 'knn' which has k fixed nearest neighbours,each node in 'kinn' graph may have a **variable** number of neighbours allocated to it._  
+
+### Usage
+
+The predicition process begins by training the dataset using _kinn.train_
+which returns a kinn model
+
+```{r }
+library(kinn)
+#create training dataset
+x<-runif(100,min=1,max=10)
+y<-2*x+3+rnorm(100)
+df = data.frame(x,y)
+#train the model
+model= kinn.train("y~x",df)
+```
+
+Once the model is created, we can now make predictions by _kinn.predict_ 
+
+```{r kinn}
+#create test dataset
+x<-runif(50,min=1,max=10)
+y<-2*x+3+rnorm(50)
+df = data.frame(x,y)
+
+#make predictions
+yhat= kinn.predict(model,df)
+plot(x,y,type="p",pch=19,col="red")
+points(x,yhat,col="green")
+
+# plot predictors and test groups 
+legend("topright",  c("y","kinn y"),  
+lty=c(1,1), lwd=c(2.5,2.5),col=c("red","green")) 
+```
+
+And plot the model subgraphs using _kinn.plot_
+
+```{r kinn model}
+kinn.plot(model)
+```

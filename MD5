@@ -1,0 +1,8 @@
+6db39773a8f91c5455ec97f4005702f6 *DESCRIPTION
+8e32b61994b0f27cb47e9cff49c654bb *NAMESPACE
+c0740bc428a1f999072ee8593b19cad2 *R/kinn.R
+29b35e4a7b632951aacc94f5ab3d94ca *man/kinn.plot.Rd
+d24e4e042bf9f6640863d3156b86164d *man/kinn.predict.Rd
+777c0357964feea96db4ffd26603c9eb *man/kinn.train.Rd
+5c27472d9c81bdc48b9ca2183c537f5f *vignettes/illustration.png
+0fb8aebfaf2563d581e88f6c7f7f3e6f *vignettes/kinn.Rmd
