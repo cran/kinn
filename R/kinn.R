@@ -118,7 +118,7 @@ calculateEstimator <-
       (x %*% Y) / sum(x != 0)) -> ngy
     #correcting in case no neighbours are present.
     ngy[is.na(ngy)] <- (Y[simv])[is.na(ngy)]
-    (1 - alpha) * ngy + alpha * t(Y[simv])
+    (1 - alpha) * ngy + alpha * Y[simv]
   }
 
 
@@ -130,6 +130,8 @@ buildSimilarityMatrix <-
   }
 
 
+
+
 mostSimilarIndices <-
   function(X,x)
   {
@@ -137,13 +139,16 @@ mostSimilarIndices <-
     x <- as.matrix(x)
     s <- buildSimilarityMatrix(rbind(X,x))
     s <- s[(nrow(X) + 1):nrow(s),1:nrow(X),drop = F]
-    apply(s,1,function(l)
-      which(l == max(l))[1]) -> simv
+    apply(s,1,function(l) max(l)) -> maxv
+    simv<-rep(0,nrow(s))
+    for (i in 1:nrow(s))
+    {
+      simv[i]<-which(s[i,]==max(s[i,]))
+    }
+
     #simvec<-simvec[2:length(simvec)]
     return (simv)
   }
-
-
 estimate <-
   function(g,i,x)
   {
@@ -397,7 +402,7 @@ getEstimatorsVector <-
 estimateWithEntropy <-
   function(g,i,x)
   {
-    simv <- mostSimilarIndices(matrix(g$vx[[i]]),matrix(x))
+    simv <- mostSimilarIndices(g$vx[[i]],x)
     ewe <-
       getEstimatorsVector(g$gx[[i]],simv,g$vy[[i]],g$cxy[[i]],0.8)
     return (ewe)
